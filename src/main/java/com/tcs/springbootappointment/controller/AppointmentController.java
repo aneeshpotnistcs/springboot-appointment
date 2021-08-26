@@ -2,6 +2,8 @@ package com.tcs.springbootappointment.controller;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tcs.springbootappointment.Appointment;
+import com.tcs.springbootappointment.entity.Appointment;
 import com.tcs.springbootappointment.exception.AppointmentNotFoundException;
 import com.tcs.springbootappointment.service.IAppointmentService;
 
@@ -46,10 +48,9 @@ public class AppointmentController {
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
-	@PostMapping
-	public void saveAppointment(@RequestBody Appointment appointment) {
-		appointmentService.save(appointment);
-		logger.debug(appointment.getName());
+	@PostMapping("/{id}")
+	public void saveAppointment(@PathVariable("id") Integer id,@RequestBody @Valid Appointment appointment) {
+		appointmentService.save(appointment,id);
 	}
 
 	@DeleteMapping("/{id}")

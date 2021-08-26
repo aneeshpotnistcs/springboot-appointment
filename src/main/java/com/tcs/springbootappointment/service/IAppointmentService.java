@@ -2,10 +2,10 @@ package com.tcs.springbootappointment.service;
 
 import java.util.Optional;
 
-import com.tcs.springbootappointment.Appointment;
+import com.tcs.springbootappointment.entity.Appointment;
 
 public interface IAppointmentService {
-	void save(Appointment appointment);
+	void save(Appointment appointment, Integer id);
 
 	Iterable<Appointment> getAllAppointments();
 

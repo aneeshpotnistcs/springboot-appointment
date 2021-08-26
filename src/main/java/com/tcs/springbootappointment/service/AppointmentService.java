@@ -1,6 +1,8 @@
 package com.tcs.springbootappointment.service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.tcs.springbootappointment.Appointment;
+import com.tcs.springbootappointment.entity.Appointment;
+import com.tcs.springbootappointment.entity.User;
 import com.tcs.springbootappointment.exception.AppointmentNotFoundException;
+import com.tcs.springbootappointment.exception.UserNotFoundException;
 import com.tcs.springbootappointment.repository.IAppointmentRepository;
+import com.tcs.springbootappointment.repository.IUserRepository;
 
 @Service
 public class AppointmentService implements IAppointmentService {
@@ -18,9 +23,19 @@ public class AppointmentService implements IAppointmentService {
 
 	@Autowired
 	IAppointmentRepository appointmentRepository;
+	
+	@Autowired
+	IUserRepository userRepository;
 
 	@Override
-	public void save(Appointment appointment) {
+	public void save(Appointment appointment, Integer id) {
+		Optional<User> user = userRepository.findById(id);
+		if(!user.isPresent()) {
+			throw new UserNotFoundException("user does not exist");
+		}
+		Set<Appointment> appointmentForUser = new HashSet<>();
+		appointmentForUser.add(appointment);
+		user.get().setAppointments(appointmentForUser);
 		appointmentRepository.save(appointment);
 		logger.debug("saved");
 	}
